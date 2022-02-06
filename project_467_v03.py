@@ -5,6 +5,9 @@
 #  to files for further use as inputs for asset selection algorithms, including machine-learning based algorithms.
 #####################################################################################################################
 import numpy as np
+import pandas as pd
+import yfinance as yf
+from pathlib import Path
 import statistics
 
 data_path = "../data/"                                      # Path to folder with input files
@@ -28,19 +31,26 @@ class Asset:
 
     # Loads the daily data from files and stores the data in table at self.dailyData[][]
     def GetDailyData(self):
-        fileIn = open(data_path + self.name + ".csv", "r")
+        path = Path(data_path + self.name + ".csv")
+
+        # Download price and volume daily data if they have not been retrieved yet
+        if not path.is_file():
+            df = yf.download(self.name)
+            df.to_csv(path)
+
+        fileIn = open(path, "r")
         fileIn.readline()
         self.dailyData = []
-        
+
         for line in fileIn:
             currentValues = line.split(",")
             currentRecord = []
-            
+
             for field in currentValues:
                 currentRecord.append(field.rstrip())
-                
+
             self.dailyData.append(currentRecord)
-    
+
         fileIn.close()
 
     # Calculates monthly data based on self.dailyData[][], stores result in self.monthlyData[][]
@@ -84,7 +94,7 @@ class Asset:
 def GetSecurityList():
        fileIn = open(data_path + security_list_source, "r")
        security_list = []
-       
+
        for line in fileIn:
            security_list.append(line.rstrip())
 
