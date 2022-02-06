@@ -23,8 +23,36 @@ DAILY_VOLUME = 6
 
 
 #####################################################################################################################
+# Helper functions
+#####################################################################################################################
+
+# Sets up the necessary directories if they do not exist already
+def initialize():
+    path = Path(data_path)
+    if not path.is_dir():
+        print("Data directory not found at " + data_path + "\nMaking directory... ", end="")
+        path.mkdir()
+        print("Data directory created")
+
+    path = Path(output_path)
+    if not path.is_dir():
+        print("Output directory not found at " + output_path + "\nMaking directory... ", end="")
+        path.mkdir()
+        print("Output directory created")
+
+    path = Path(data_path + security_list_source)
+    if not path.is_file():
+        print("Security list file not found at " + security_list_source + "\nMaking empty file...")
+        path.touch()
+        print("Please add security symbols line by line in " + data_path + security_list_source)
+
+
+
+
+#####################################################################################################################
 #  Object representing an instance of a given security, including data and useful methods.
 #####################################################################################################################
+
 class Asset:
     def __init__(self, name):
         self.name = name
@@ -162,7 +190,12 @@ def calculateGeometricMeanDailyReturn(dailyPrices, previousMonthClosing):
 #  Execution starts here
 #####################################################################################################################
 
+initialize()                                    # Sets up the necessary directories if they do not exist already
+
 security_list = GetSecurityList()               # Load the list of securities (ticker symbols) to be considered
+
+if len(security_list) == 0:
+    print("Please add security symbols line by line in " + data_path + security_list_source)
 
 for security in security_list:                  # For each security to be considered
     currentSecurity = Asset(security)           #   ...create an Asset object,
