@@ -61,10 +61,8 @@ class Asset:
     def GetDailyData(self):
         path = Path(data_path + self.name + ".csv")
 
-        # Download price and volume daily data if they have not been retrieved yet
-        if not path.is_file():
-            df = yf.download(self.name)
-            df.to_csv(path)
+        df = yf.download(self.name, period="1mo", interval="5m")
+        df.to_csv(path)
 
         fileIn = open(path, "r")
         fileIn.readline()
