@@ -44,7 +44,6 @@ def initialize():
     if not path.is_file():
         print("Security list file not found at " + security_list_source + "\nMaking empty file...")
         path.touch()
-        print("Please add security symbols line by line in " + data_path + security_list_source)
 
 
 
