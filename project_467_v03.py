@@ -60,7 +60,7 @@ class Asset:
     def GetDailyData(self):
         path = Path(data_path + self.name + ".csv")
 
-        df = yf.download(self.name, period="1mo", interval="5m")
+        df = yf.download(self.name)
         df.to_csv(path)
 
         fileIn = open(path, "r")
