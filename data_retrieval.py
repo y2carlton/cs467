@@ -41,11 +41,7 @@ def get_er(symbol_str: str) -> str:
 
 
 def get_fgi() -> dict:
-    """Returns the expense ratio for the symbol.
-
-    Example symbol_str: 'TQQQ'
-    symbol_str is case sensitive.
-    """
+    """Returns the current CNN fear and greed index."""
     url = f"https://mktdata.fly.dev/fgi"
     response_json = requests.get(url).json
     return response_json
