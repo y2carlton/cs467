@@ -1,7 +1,9 @@
 alpaca_trade_api
 bs4
 pandas
-python-dateutil
+pendulum
 python-dotenv
 requests
+scikit-learn
+tensorflow
 yfinance

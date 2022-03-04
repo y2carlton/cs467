@@ -1,12 +1,11 @@
 from alpaca_trade_api.rest import REST, TimeFrame, TimeFrameUnit
 import bs4
-from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
 import pandas as pd
+import pendulum
 import requests
 import yfinance as yf
 
-import datetime
 import os
 
 
@@ -68,10 +67,10 @@ def get_history_apca(
     api = REST()
 
     if start is None:
-        start = (datetime.datetime(year=1600, month=1, day=1)).strftime("%Y-%m-%d")
+        start = pendulum.datetime(1600, 1, 1).strftime("%Y-%m-%d")
     if end is None:
         # NOTE: Cannot get data from the past 15 minutes, so get data up to yesterday.
-        end = (datetime.datetime.today() - relativedelta(days=1)).strftime("%Y-%m-%d")
+        end = (pendulum.yesterday().in_tz('America/New_York')).strftime("%Y-%m-%d")
 
     return api.get_bars(
         symbol,
