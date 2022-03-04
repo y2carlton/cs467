@@ -120,7 +120,7 @@ class Trainer:
             self._original_df = get_history_apca(self.symbol)
         return self._original_df.copy(deep=True)
 
-    @log("Renaming dataframe columns")
+    @log("Renaming dataframe columns", logging_func=logging.debug)
     def _rename_cols(self, df):
         """Modifies the dataframe in place.
 
@@ -143,7 +143,7 @@ class Trainer:
             inplace=True,
         )
 
-    @log("Creating helper column")
+    @log("Creating helper column", logging_func=logging.debug)
     def _create_helper_col(self, df, time_format="%G-W%V"):
         """Creates a helper column in the dataframe to group by later on.
         Modifies the dataframe in place.
@@ -158,7 +158,7 @@ class Trainer:
         df["Group"] = df.index
         df["Group"] = df["Group"].dt.strftime(time_format)  # YYYY-Www format
 
-    @log("Creating new dataframe of the volatility grouped by the helper column")
+    @log("Creating new dataframe of the volatility grouped by the helper column", logging_func=logging.debug)
     def _create_volatility_df(self, df):
         """Creates a new dataframe of the volatility grouped by the helper column.
 
@@ -188,7 +188,7 @@ class Trainer:
         scaler.fit(np.array(df).reshape(-1, 1))
         return scaler
 
-    @log("Normalizing volatility values")
+    @log("Normalizing volatility values", logging_func=logging.debug)
     def _normalize_values(self, df):
         """Normalize volatility values because LSTM is sensitive to magnitude.
 
@@ -225,6 +225,7 @@ class Trainer:
         # Convert to numpy arrays
         return np.array(train_x), np.array(train_y)
 
+    @log("Creating LSTM model", logging_func=logging.debug)
     def _create_model(self) -> Sequential:
         """Creates and returns an LSTM model.
 
@@ -252,7 +253,7 @@ class Trainer:
     )
     def _get_optimal_epochs(
         self,
-        num_times=15,
+        num_times=10,
         max_epochs=20,
         validation_split=0.2,
         verbose=0,
@@ -282,6 +283,7 @@ class Trainer:
             epoch_nums.append(self._get_epoch_num_with_min_val_loss(training_history))
         return int(statistics.median(epoch_nums))
 
+    @log("Getting the epoch number with the minimum validation loss", logging_func=logging.debug)
     def _get_epoch_num_with_min_val_loss(self, training_history):
         """Returns the epoch number with the minimum validation loss.
 
