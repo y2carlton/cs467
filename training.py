@@ -107,7 +107,7 @@ class Trainer:
         df = self._create_volatility_df(df)
         df = self._normalize_values(df)
 
-        input = np.array([df[-52:]])
+        input = np.array([df[-(52 + 1) : -1]])
         prediction_normalized = self.model.predict(input)
         prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
@@ -132,7 +132,7 @@ class Trainer:
         df = self._create_volatility_df(df)
         df = self._normalize_values(df)
 
-        input = np.array([df[-(52 + 1) : -1]])
+        input = np.array([df[-52:]])
         prediction_normalized = self.model.predict(input)
         prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
