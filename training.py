@@ -74,7 +74,7 @@ class Trainer:
 
         input = np.array([df[-52:]])
         prediction_normalized = self.model.predict(input)
-        prediction = scaler.inverse_transform(prediction_normalized)[0][0]
+        prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
 
     @log("Predicting current week's volatility")
@@ -103,7 +103,7 @@ class Trainer:
 
         input = np.array([df[-(52 + 1) : -1]])
         prediction_normalized = self.model.predict(input)
-        prediction = scaler.inverse_transform(prediction_normalized)[0][0]
+        prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
 
     @log("Getting historical data for training")
@@ -225,7 +225,6 @@ class Trainer:
         # Convert to numpy arrays
         return np.array(train_x), np.array(train_y)
 
-    @log("Creating LSTM model")
     def _create_model(self) -> Sequential:
         """Creates and returns an LSTM model.
 
@@ -249,7 +248,7 @@ class Trainer:
         return model
 
     @log(
-        "Attempting to find optimal epoch number, will create and get the epoch number with minimum validation loss multiple times"
+        "Attempting to find optimal epoch number"
     )
     def _get_optimal_epochs(
         self,
@@ -283,7 +282,6 @@ class Trainer:
             epoch_nums.append(self._get_epoch_num_with_min_val_loss(training_history))
         return int(statistics.median(epoch_nums))
 
-    @log("Getting the epoch number with the minimum validation loss")
     def _get_epoch_num_with_min_val_loss(self, training_history):
         """Returns the epoch number with the minimum validation loss.
 
