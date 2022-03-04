@@ -187,15 +187,16 @@ def calculateGeometricMeanDailyReturn(dailyPrices, previousMonthClosing):
 #  Execution starts here
 #####################################################################################################################
 
-initialize()                                    # Sets up the necessary directories if they do not exist already
+if __name__ == "__main__":
+    initialize()                                    # Sets up the necessary directories if they do not exist already
 
-security_list = GetSecurityList()               # Load the list of securities (ticker symbols) to be considered
+    security_list = GetSecurityList()               # Load the list of securities (ticker symbols) to be considered
 
-if len(security_list) == 0:
-    print("Please add security symbols line by line in " + data_path + security_list_source)
+    if len(security_list) == 0:
+        print("Please add security symbols line by line in " + data_path + security_list_source)
 
-for security in security_list:                  # For each security to be considered
-    currentSecurity = Asset(security)           #   ...create an Asset object,
-    currentSecurity.GetDailyData()              #   ...input the daily data from files,
-    currentSecurity.CalculateMonthlyData()      #   ...calculate the monthly data that we need
-    currentSecurity.WriteFileMonthly()          #   ...and write these to file for use as security selection inputs.
+    for security in security_list:                  # For each security to be considered
+        currentSecurity = Asset(security)           #   ...create an Asset object,
+        currentSecurity.GetDailyData()              #   ...input the daily data from files,
+        currentSecurity.CalculateMonthlyData()      #   ...calculate the monthly data that we need
+        currentSecurity.WriteFileMonthly()          #   ...and write these to file for use as security selection inputs.
