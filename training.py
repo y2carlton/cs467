@@ -22,8 +22,14 @@ class Trainer:
         self._original_df = None
 
     @log("Beginning process to train model")
-    def train(self):
-        df = self._get_historical_data_for_training()
+    def train(self, start=None, end=None):
+        """Gets data and trains the LSTM model.
+
+        Args:
+            start (str)
+            end (str)
+        """
+        df = self._get_historical_data_for_training(start, end)
         self._rename_cols(df)
         self._create_helper_col(df)
         df = self._create_volatility_df(df)
@@ -101,13 +107,46 @@ class Trainer:
         df = self._create_volatility_df(df)
         df = self._normalize_values(df)
 
+        input = np.array([df[-52:]])
+        prediction_normalized = self.model.predict(input)
+        prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
+        return prediction
+
+    @log("Predicting volatility by given week number")
+    def predict_by_week_number(self, week_to_predict):
+        """
+        Args:
+            week_to_predict (str): In format YYYY-Www, for example, 2021-W01
+        """
+        if self.model is None:
+            raise Exception("Model has not been trained yet")
+
+        wtp_dt = pendulum.parse(week_to_predict, tz='America/New_York')
+
+        start = (
+            wtp_dt
+            .subtract(weeks=56)
+            .strftime("%Y-%m-%d")
+        )
+        end = (
+            wtp_dt
+            .subtract(days=1)
+            .strftime("%Y-%m-%d")
+        )
+        df = get_history_apca(self.symbol, start=start, end=end)
+
+        self._rename_cols(df)
+        self._create_helper_col(df)
+        df = self._create_volatility_df(df)
+        df = self._normalize_values(df)
+
         input = np.array([df[-(52 + 1) : -1]])
         prediction_normalized = self.model.predict(input)
         prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
 
     @log("Getting historical data for training")
-    def _get_historical_data_for_training(self, force=False):
+    def _get_historical_data_for_training(self, start, end, force=False):
         """Returns a dataframe of 5-minute interval historical OHLC data  for the symbol.
 
         Args:
