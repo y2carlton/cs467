@@ -121,18 +121,10 @@ class Trainer:
         if self.model is None:
             raise Exception("Model has not been trained yet")
 
-        wtp_dt = pendulum.parse(week_to_predict, tz='America/New_York')
+        wtp_dt = pendulum.parse(week_to_predict, tz="America/New_York")
 
-        start = (
-            wtp_dt
-            .subtract(weeks=56)
-            .strftime("%Y-%m-%d")
-        )
-        end = (
-            wtp_dt
-            .subtract(days=1)
-            .strftime("%Y-%m-%d")
-        )
+        start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
+        end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
         df = get_history_apca(self.symbol, start=start, end=end)
 
         self._rename_cols(df)
@@ -197,7 +189,10 @@ class Trainer:
         df["Group"] = df.index
         df["Group"] = df["Group"].dt.strftime(time_format)  # YYYY-Www format
 
-    @log("Creating new dataframe of the volatility grouped by the helper column", logging_func=logging.debug)
+    @log(
+        "Creating new dataframe of the volatility grouped by the helper column",
+        logging_func=logging.debug,
+    )
     def _create_volatility_df(self, df):
         """Creates a new dataframe of the volatility grouped by the helper column.
 
@@ -287,9 +282,7 @@ class Trainer:
         model.compile(loss="mean_squared_error", optimizer="adam")
         return model
 
-    @log(
-        "Attempting to find optimal epoch number"
-    )
+    @log("Attempting to find optimal epoch number")
     def _get_optimal_epochs(
         self,
         num_times=10,
@@ -322,7 +315,10 @@ class Trainer:
             epoch_nums.append(self._get_epoch_num_with_min_val_loss(training_history))
         return int(statistics.median(epoch_nums))
 
-    @log("Getting the epoch number with the minimum validation loss", logging_func=logging.debug)
+    @log(
+        "Getting the epoch number with the minimum validation loss",
+        logging_func=logging.debug,
+    )
     def _get_epoch_num_with_min_val_loss(self, training_history):
         """Returns the epoch number with the minimum validation loss.
 
