@@ -81,7 +81,7 @@ class Trainer:
             .strftime("%Y-%m-%d")
         )
         if df_to_use is not None:
-            df = df_to_use.loc[start:end]
+            df = df_to_use.loc[start:end].copy(deep=True)
         else:
             df = get_history_apca(self.symbol, start=start, end=end)
 
@@ -118,7 +118,7 @@ class Trainer:
             .strftime("%Y-%m-%d")
         )
         if df_to_use is not None:
-            df = df_to_use.loc[start:end]
+            df = df_to_use.loc[start:end].copy(deep=True)
         else:
             df = get_history_apca(self.symbol, start=start, end=end)
 
@@ -148,7 +148,7 @@ class Trainer:
         start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
         end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
         if df_to_use is not None:
-            df = df_to_use.loc[start:end]
+            df = df_to_use.loc[start:end].copy(deep=True)
         else:
             df = get_history_apca(self.symbol, start=start, end=end)
 
