@@ -19,7 +19,6 @@ class Trainer:
         self.symbol = symbol
         self.model = None
         self.scaler = None
-        self._original_df = None
 
     @log("Beginning process to train model")
     def train(self, start=None, end=None):
