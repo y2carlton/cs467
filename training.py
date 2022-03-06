@@ -52,7 +52,7 @@ class Trainer:
             self._train_y,
             epochs=optimal_epochs,
             validation_split=validation_split,
-            callback=EarlyStopping(
+            callbacks=EarlyStopping(
                 monitor="val_loss", patience=3, restore_best_weights=True
             ),
             verbose=1,
