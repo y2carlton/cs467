@@ -55,7 +55,12 @@ class Trainer:
         )
 
     @log("Predicting next week's volatility")
-    def predict_next(self):
+    def predict_next(self, df_to_use=None):
+        """Predicts the next week's volatility.
+
+        Args:
+            df_to_use (pandas.core.frame.DataFrame): If specified, use data found in this dataframe instead of getting data from the internet.
+        """
         if self.model is None:
             raise Exception("Model has not been trained yet")
 
@@ -71,7 +76,10 @@ class Trainer:
             .subtract(days=1)
             .strftime("%Y-%m-%d")
         )
-        df = get_history_apca(self.symbol, start=start, end=end)
+        if df_to_use:
+            df = df_to_use.loc[start:end]
+        else:
+            df = get_history_apca(self.symbol, start=start, end=end)
 
         self._rename_cols(df)
         self._create_helper_col(df)
@@ -85,6 +93,11 @@ class Trainer:
 
     @log("Predicting current week's volatility")
     def predict_current(self):
+        """Predicts the current week's volatility.
+
+        Args:
+            df_to_use (pandas.core.frame.DataFrame): If specified, use data found in this dataframe instead of getting data from the internet.
+        """
         if self.model is None:
             raise Exception("Model has not been trained yet")
 
@@ -100,7 +113,10 @@ class Trainer:
             .subtract(days=1)
             .strftime("%Y-%m-%d")
         )
-        df = get_history_apca(self.symbol, start=start, end=end)
+        if df_to_use:
+            df = df_to_use.loc[start:end]
+        else:
+            df = get_history_apca(self.symbol, start=start, end=end)
 
         self._rename_cols(df)
         self._create_helper_col(df)
@@ -114,9 +130,11 @@ class Trainer:
 
     @log("Predicting volatility by given week number")
     def predict_by_week_number(self, week_to_predict):
-        """
+        """Predict the volatility for the given week.
+
         Args:
             week_to_predict (str): In format YYYY-Www, for example, 2021-W01
+            df_to_use (pandas.core.frame.DataFrame): If specified, use data found in this dataframe instead of getting data from the internet.
         """
         if self.model is None:
             raise Exception("Model has not been trained yet")
@@ -125,7 +143,10 @@ class Trainer:
 
         start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
         end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
-        df = get_history_apca(self.symbol, start=start, end=end)
+        if df_to_use:
+            df = df_to_use.loc[start:end]
+        else:
+            df = get_history_apca(self.symbol, start=start, end=end)
 
         self._rename_cols(df)
         self._create_helper_col(df)
