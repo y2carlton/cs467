@@ -6,9 +6,10 @@ import numpy as np
 import pandas as pd
 import pendulum
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import LSTM
 from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.models import Sequential
 
 import logging
 import statistics
@@ -51,6 +52,9 @@ class Trainer:
             self._train_y,
             epochs=optimal_epochs,
             validation_split=validation_split,
+            callback=EarlyStopping(
+                monitor="val_loss", patience=3, restore_best_weights=True
+            ),
             verbose=1,
         )
 
@@ -92,7 +96,7 @@ class Trainer:
         return prediction
 
     @log("Predicting current week's volatility")
-    def predict_current(self):
+    def predict_current(self, df_to_use=None):
         """Predicts the current week's volatility.
 
         Args:
@@ -129,7 +133,7 @@ class Trainer:
         return prediction
 
     @log("Predicting volatility by given week number")
-    def predict_by_week_number(self, week_to_predict):
+    def predict_by_week_number(self, week_to_predict, df_to_use=None):
         """Predict the volatility for the given week.
 
         Args:
