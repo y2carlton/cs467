@@ -29,7 +29,8 @@ class Trainer:
             start (str)
             end (str)
         """
-        df = self._get_historical_data_for_training(start, end)
+        logging.info("Getting historical data for training")
+        df = get_history_apca(self.symbol, start=start, end=end)
         self._rename_cols(df)
         self._create_helper_col(df)
         df = self._create_volatility_df(df)
@@ -157,20 +158,6 @@ class Trainer:
         prediction_normalized = self.model.predict(input)
         prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
-
-    @log("Getting historical data for training")
-    def _get_historical_data_for_training(self, start, end, force=False):
-        """Returns a dataframe of 5-minute interval historical OHLC data  for the symbol.
-
-        Args:
-            force (bool): Only retrieves data from the internet if it hasn't already or if force is set to True.
-
-        Returns:
-            pandas.core.frame.DataFrame
-        """
-        if force is True or self._original_df is None:
-            self._original_df = get_history_apca(self.symbol)
-        return self._original_df.copy(deep=True)
 
     @log("Renaming dataframe columns", logging_func=logging.debug)
     def _rename_cols(self, df):
