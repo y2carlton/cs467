@@ -137,7 +137,7 @@ class Trainer:
         """Predict the volatility for the given week.
 
         Args:
-            week_to_predict (str): In format YYYY-Www, for example, 2021-W01
+            week_to_predict (str): In format YYYY-Www, for example, '2021-W01'
             df_to_use (pandas.core.frame.DataFrame): If specified, use data found in this dataframe instead of getting data from the internet.
         """
         if self.model is None:
