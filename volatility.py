@@ -34,7 +34,7 @@ def get_volatility_this_week(data_dir=None, trained_models_dir="trained_models")
 
     Args:
         data_dir (str): Will look for OHLC data in this directory if specified. OHLC data is assumed to contain at least 52 weeks of data before the week to be predicted and expected to be named "{data_dir}/{symbol}_ohlc.csv" in CSV format with the following columns:
-            timestamp  open  high  low  close  volume  trade_count  vwap
+            timestamp  open  high  low  close  volume
         trained_models_dir (str): Will look for and save trained models in this directory. Models are expected to be named "{trained_models_dir}/{symbol}__Trainer_obj.pkl".
 
     Returns:
@@ -52,7 +52,7 @@ def get_volatility_next_week(data_dir=None, trained_models_dir="trained_models")
 
     Args:
         data_dir (str): Will look for OHLC data in this directory if specified. OHLC data is assumed to contain at least 52 weeks of data before the week to be predicted and expected to be named "{data_dir}/{symbol}_ohlc.csv" in CSV format with the following columns:
-            timestamp  open  high  low  close  volume  trade_count  vwap
+            timestamp  open  high  low  close  volume
         trained_models_dir (str): Will look for and save trained models in this directory. Models are expected to be named "{trained_models_dir}/{symbol}__Trainer_obj.pkl".
 
     Returns:
@@ -71,7 +71,7 @@ def get_volatility_for_week(week, data_dir=None, trained_models_dir="trained_mod
     Args:
         week (str): In format YYYY-Www, for example, '2021-W01'
         data_dir (str): Will look for OHLC data in this directory if specified. OHLC data is assumed to contain at least 52 weeks of data before the week to be predicted and expected to be named "{data_dir}/{symbol}_ohlc.csv" in CSV format with the following columns:
-            timestamp  open  high  low  close  volume  trade_count  vwap
+            timestamp  open  high  low  close  volume
         trained_models_dir (str): Will look for and save trained models in this directory. Models are expected to be named "{trained_models_dir}/{symbol}__Trainer_obj.pkl".
 
     Returns:
